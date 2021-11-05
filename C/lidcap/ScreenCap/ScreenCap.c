@@ -409,26 +409,26 @@ SCColor getDominantColorFromScreen(int monitorIndex, PColorHistogram* colHist, i
 }
 
 
-int main() {
-	//capture the screen and save the file
-	//HBITMAP screen = captureScreenImage();
-	//writeDIB("E:/Work/Codes/C/lidcap/ScreenCap/test/sahidScreenshot.bmp", screen, NULL);
-	//DeleteObject(screen);
-
-	//qerrying the count of monitor
-	//int i = queryMonitorCount(NULL);
-
-	//capturing the screen and saving the file in one go
-	captureScreenImageEx(2, "E:/Work/Codes/C/lidcap/ScreenCap/test/index_N1.bmp", TRUE);
-
-	//finding the top 4 dominant colors in the screen 2
-	/*int* domIndex;
-	PColorHistogram hist;
-	int histSize;
-	SCColor  domColor = getDominantColorFromScreen(2, &hist, &histSize, &domIndex);
-		
-	free(domIndex);*/
-
-
-	return 0;
-}
+//int main() {
+//	//capture the screen and save the file
+//	HBITMAP screen = captureScreenImage();
+//	writeDIB("E:/Work/Codes/C/lidcap/ScreenCap/test/sahidScreenshot.bmp", screen, NULL);
+//	DeleteObject(screen);
+//
+//	//qerrying the count of monitor
+//	int i = queryMonitorCount(NULL);
+//
+//	//capturing the screen and saving the file in one go
+//	captureScreenImageEx(2, "E:/Work/Codes/C/lidcap/ScreenCap/test/index_N1.bmp", TRUE);
+//
+//	//finding the top 4 dominant colors in the screen 2
+//	int* domIndex;
+//	PColorHistogram hist;
+//	int histSize;
+//	SCColor  domColor = getDominantColorFromScreen(2, &hist, &histSize, &domIndex);
+//		
+//	free(domIndex);
+//
+//
+//	return 0;
+//}
