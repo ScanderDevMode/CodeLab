@@ -7,6 +7,6 @@
         mc:Ignorable="d"
         Title="GMS_LotteryTracker" Height="450" Width="600" ResizeMode="CanMinimize">
     <Grid>
-        <TabControl Name="MainControl" ItemsSource="{Binding}"/>
+        <TabControl Name="MainControl" ItemsSource="{Binding}" SelectionChanged="TabItem_MouseLeftButtonDown"/>
     </Grid>
 </Window>
