@@ -1,0 +1,40 @@
+﻿<UserControl x:Class="GMS_LotteryTracker.GameListItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GMS_LotteryTracker"
+             mc:Ignorable="d" 
+             d:DesignHeight="150" d:DesignWidth="600">
+    <Grid x:Name="MainGrid">
+        <Grid.Background>
+            <LinearGradientBrush StartPoint="1,0" EndPoint="1,1" Opacity="0.5">
+                <GradientStop Color="DarkGray" Offset="0.0"/>
+                <GradientStop Color="LightGreen" Offset="0.7"/>
+            </LinearGradientBrush>
+        </Grid.Background>
+
+
+        <Label Name="gameNameOut"  Content="Game :" Margin="10,10,101,104" FontSize="16" Foreground="#FFF7F5F5"/>
+
+
+        <Label Content="Game Created At :" Margin="10,52,482,75" Foreground="#FFF7F5F5"/>
+        <Label Name="gameCreateDateOut" Content="00-00-0000 | 00:00:00" Margin="123,52,346,75" Foreground="#FFF7F5F5"/>
+
+        <Label Content="Game Result Day :" Margin="10,78,482,49" Foreground="#FFF7F5F5"/>
+        <Label Name="gameResultDayOut" Content="00-00-0000 | 00:00:00" Margin="123,78,346,49" Foreground="#FFF7F5F5"/>
+
+
+        <Button Margin="10,106,510,10" Name="editGameBtn"  Content="Edit Game" Background="#00ADADAD" BorderBrush="#00707070" Foreground="Gainsboro"/>
+        <Button Margin="95,106,414,10" Name="manageTicketBtn"  Content="Manage Ticket" Background="#00ADADAD" BorderBrush="#00707070" Foreground="Gainsboro"/>
+        <Button Margin="191,106,329,10" Name="deleteGameBtn"  Content="Delete Game" Background="#00ADADAD" BorderBrush="#00707070" Foreground="Gainsboro"/>
+
+        <Label Content="Status :" Margin="300,111,241,16" Foreground="#FFF7F5F5"/>
+        <Label Name="statusOut" Content="Active" Margin="345,111,205,14" Foreground="#FFF7F5F5"/>
+        <Label Content="Tickets :" Foreground="#FFF7F5F5" Margin="400,110,150,12"/>
+        <Label Name="tikectsOut" Content="0/0" Margin="455,112,35,14" Foreground="#FFF7F5F5"/>
+        
+        
+
+    </Grid>
+</UserControl>
