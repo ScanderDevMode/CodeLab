@@ -49,6 +49,7 @@ namespace GMS_LotteryTracker.theme_stick
         public static List<KeyValuePair<string, Theme_Stick>> themes = new List<KeyValuePair<string, Theme_Stick>>();
 
 
+        //adds up the default themes into the list
         private void addThemes() {
             selectedIndex = 0;
 
@@ -66,6 +67,28 @@ namespace GMS_LotteryTracker.theme_stick
         public KeyValuePair<string, Theme_Stick> getSelectedTheme() {
             return themes[selectedIndex];
         }
+
+
+        //returns the background brush for the currently selected theme
+        public LinearGradientBrush getBackgroundGradientBrush() {
+
+            Theme_Stick theme = themes[selectedIndex].Value;
+
+            GradientStop primaryColorStop = new GradientStop(theme.primaryColor, 0.0);
+            GradientStop stateColorStop = new GradientStop(theme.SecondaryColor, 0.7);
+
+            GradientStopCollection stopColl = new GradientStopCollection();
+            stopColl.Add(primaryColorStop);
+            stopColl.Add(stateColorStop);
+
+            LinearGradientBrush lgb = new LinearGradientBrush(stopColl);
+            lgb.StartPoint = new Point(1, 0);
+            lgb.EndPoint = new Point(1, 1);
+
+            return lgb;
+        }
+
+
 
         public bool selectThemeByIndex(int index) {
             if (index > themes.Count - 1) return false;

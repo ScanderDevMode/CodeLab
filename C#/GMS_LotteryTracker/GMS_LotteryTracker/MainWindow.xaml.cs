@@ -18,7 +18,7 @@ using GMS_LotteryTracker.db_stick;
 
 namespace GMS_LotteryTracker
 {
-
+    //enum for the Main UI types
     public enum UI_TYPE {
         NO_TYPE,
         MANAGER_GRID,
@@ -28,63 +28,85 @@ namespace GMS_LotteryTracker
         DEBT_GRID
     }
 
-
     //base UI Ref class
-    public class UI_REF {
+    public abstract class UI_REF {
         protected UI_TYPE uiType;
 
         public UI_TYPE getUIType() {
             return uiType;
         }
+
+        public abstract bool refreshUITheme();
     }
 
     //ref class for UI Manager Grid
-    public class ManagerGrid_UI_REF : UI_REF {
+    public class ManagerGrid_UI_REF : UI_REF{
         public TextBlock statusText = null;
+        public Grid managerGrid = null;
+
+        private theme_stick.Themes_Stick themes;
 
         public ManagerGrid_UI_REF() {
             this.uiType = UI_TYPE.MANAGER_GRID;
+            this.themes = new theme_stick.Themes_Stick();
+        }
+
+        //overrides
+        public override bool refreshUITheme()
+        {
+            //set the ui brushes according to the selected theme
+            Brush textBrush = new SolidColorBrush(themes.getSelectedTheme().Value.textColor);
+
+            //background
+            if (managerGrid != null)
+                managerGrid.Background = themes.getBackgroundGradientBrush();
+
+            //controls
+            statusText.Foreground = textBrush;
+
+            return true;
         }
     }
 
-
-    public class NewGameGrid_UI_REF : UI_REF {
-
+    public class NewGameGrid_UI_REF{
         //refs
-        public DataGrid gameListGrid = null;
+        public List<KeyValuePair<int, GameListItem>> gameList;
+        public StackPanel gameListPanel = null;
 
         public NewGameGrid_UI_REF() {
-            this.uiType = UI_TYPE.NEW_GAME_GRID;
+            gameList = new List<KeyValuePair<int, GameListItem>>();
         }
     }
 
+    public class SearchGrid_UI_REF{
 
-    public class SearchGrid_UI_REF : UI_REF {
-
-
+        
         public SearchGrid_UI_REF() {
-            this.uiType = UI_TYPE.SEARCH_GRID;
+            
         }
     }
 
-
-
-
-    public class DebtGrid_UI_REF : UI_REF {
+    public class DebtGrid_UI_REF {
 
 
         public DebtGrid_UI_REF() {
-            this.uiType = UI_TYPE.DEBT_GRID;
         }
     }
-
 
     public class NewWindowGrid_UI_REF : UI_REF {
 
         public UI_TYPE subUIType;
 
+        //self variables
+        public Grid newWindowGrid;
+        public Button gameBoxBtn;
+        public Button debtLookUpBtn;
+        public Button searchGridBtn;
+
+
+
         //New Game Grid
-        public Grid newGameGrid;
+        public Grid newGameGrid = null;
         public NewGameGrid_UI_REF newGame_uiref;
 
         //Search Grid
@@ -95,12 +117,44 @@ namespace GMS_LotteryTracker
         public Grid debtGrid;
         public DebtGrid_UI_REF debtGrid_uiref;
 
+        private theme_stick.Themes_Stick themes;
 
         public NewWindowGrid_UI_REF() {
             this.uiType = UI_TYPE.NEW_TAB_GRID;
             subUIType = UI_TYPE.NO_TYPE;
+            themes = new theme_stick.Themes_Stick();
         }
 
+
+        public override bool refreshUITheme()
+        {
+            //set the ui brushes according to the selected theme
+            Brush textBrush = new SolidColorBrush(themes.getSelectedTheme().Value.textColor);
+            
+
+            //determine the type stored in the ui
+            if (subUIType == UI_TYPE.NO_TYPE) { //new window grid
+                newWindowGrid.Background = themes.getBackgroundGradientBrush(); //background
+
+                //controls
+                //Buttons
+
+            }
+
+            else if (subUIType == UI_TYPE.NEW_GAME_GRID) {
+                
+            }
+
+            else if (subUIType == UI_TYPE.DEBT_GRID) {
+
+            }
+
+            else if (subUIType == UI_TYPE.SEARCH_GRID) { 
+            
+            }
+
+            return true;
+        }
     }
 
 
@@ -110,6 +164,7 @@ namespace GMS_LotteryTracker
         private List<TabItem> tabs;
         private List<UI_REF> uirefs;
         private db_stick.db_stick db;
+        private theme_stick.Themes_Stick themes;
 
         //Defines
         public const int ROW_MANAGER_GRID       = 3; //NOT-IN-USE Right Now
@@ -120,11 +175,12 @@ namespace GMS_LotteryTracker
         public const int COL_NEW_GAME_GRID      = 10;
 
 
-        public Grid_Factory(List<UI_REF> uirefs, List<TabItem> tabs, db_stick.db_stick db)
+        public Grid_Factory(List<UI_REF> uirefs, List<TabItem> tabs, db_stick.db_stick db, theme_stick.Themes_Stick themes)
         {
             this.uirefs = uirefs;
             this.tabs = tabs;
             this.db = db;
+            this.themes = themes;
         }
 
 
@@ -133,16 +189,11 @@ namespace GMS_LotteryTracker
             Grid managerGrid = new Grid();
             ManagerGrid_UI_REF uiref = new ManagerGrid_UI_REF();
 
-            //for now
-            managerGrid.Background = Brushes.Beige;
-
-
-            //we may need to calculate row and col size here
-            
+            //add the manager grid to the uiref
+            uiref.managerGrid = managerGrid;
 
             //clear the grid
             managerGrid.Children.Clear();
-
 
             //create the rows and cols
             for (int i = 0; i < ROW_MANAGER_GRID; i++)
@@ -156,7 +207,6 @@ namespace GMS_LotteryTracker
                 
                 managerGrid.ColumnDefinitions.Add(col);
             }
-
 
             //create the status text block
             TextBlock statusText = new TextBlock();
@@ -173,7 +223,38 @@ namespace GMS_LotteryTracker
             //add the controls to the Grid
             managerGrid.Children.Add(statusText);
 
+            //refresh theme
+            uiref.refreshUITheme();
+
             return managerGrid;
+        }
+
+
+        //function to fill up the game list and make the game list items for the stack panel
+        //accroding to a supplied game table datatable
+        //also fills up the new game ui refs list
+        private bool fillGameList(DataTable gameTabelSet, NewGameGrid_UI_REF uiref, StackPanel sp) {
+
+            //main loop for each of the rows
+            foreach (DataRow row in gameTabelSet.Rows) {
+                //fetch the details of the game
+                int id = (int)row["ID"];
+                string gameName = row["GAME_NAME"].ToString();
+                if (gameName == null) gameName = "Personal_Lottery"; //for fail safe
+                DateTime createDate = (DateTime)row["CREATE_DATE"];
+                DateTime gameDate = (DateTime)row["GAME_DATE"];
+
+                //create the game list item
+                GameListItem gameListItem = new GameListItem(id, gameName, createDate, gameDate);
+
+                //add to the stack panel
+                sp.Children.Add(gameListItem);
+                //add to the uiref
+                uiref.gameList.Add(new KeyValuePair<int, GameListItem>(id, gameListItem));
+            }
+
+
+            return true;
         }
 
 
@@ -181,11 +262,9 @@ namespace GMS_LotteryTracker
             Grid newGameGrid = new Grid();
             NewGameGrid_UI_REF newGameGrid_UI_REF = new NewGameGrid_UI_REF();
 
-
             //DEBUG ONLY
             newGameGrid.ShowGridLines = true;
-            newGameGrid.Background = Brushes.Yellow;
-
+            newGameGrid.Background = Brushes.Beige;
 
             //devide the grid into rows and cols
             for (int i = 0; i < ROW_NEW_GAME_GRID; i++) {
@@ -200,8 +279,7 @@ namespace GMS_LotteryTracker
             //get the table data set
             DataTable gameList = db.get_All_Games();
 
-
-            //create the ui controls
+            //create the ui controls -----------------Deprecated------------------
 
             //Create the data grid for the Games to be displayed
             //DataGrid gameListGrid = new DataGrid();
@@ -209,7 +287,7 @@ namespace GMS_LotteryTracker
             ////gameListGrid.DataContext = gameList;
             //gameListGrid.Margin = new Thickness(2);
             //gameListGrid.Visibility = Visibility.Visible;
-            
+
 
             ////create the data grid column headers
             //gameListGrid.ItemsSource = gameList.DefaultView;
@@ -230,6 +308,37 @@ namespace GMS_LotteryTracker
             //add to the new game ui ref
             //newGameGrid_UI_REF.gameListGrid = gameListGrid;
 
+
+            //create the list of games ---------------------------NEW CODE-------------------------------------
+
+            //create the scroll view
+            ScrollViewer gameListScroll = new ScrollViewer();
+            gameListScroll.VerticalScrollBarVisibility = ScrollBarVisibility.Auto; //only visible when needed
+            Grid.SetRow(gameListScroll, 1);
+            Grid.SetColumn(gameListScroll, 5);
+            Grid.SetColumnSpan(gameListScroll, 5);
+            Grid.SetRowSpan(gameListScroll, 9);
+            //gameListScroll.Height = 100;
+            //gameListScroll.Width = 300;
+            gameListScroll.Visibility = Visibility.Visible;
+
+            //create the Stack Panel for the list
+            StackPanel sp = new StackPanel();
+            sp.Name = "StackPanel_" + windowCount;
+            sp.Margin = new Thickness(2);
+            sp.Visibility = Visibility.Visible;
+
+            //add the stack panel to the ref
+            newGameGrid_UI_REF.gameListPanel = sp;
+
+            //make and fill the game list
+            fillGameList(gameList, newGameGrid_UI_REF, sp);
+
+            //add the stack panel to the scroll viewer
+            gameListScroll.Content = sp;
+
+            //add the scroll view to the new game grid
+            newGameGrid.Children.Add(gameListScroll);
 
             //add to the uiref
             ((NewWindowGrid_UI_REF)uirefs[windowCount]).subUIType = UI_TYPE.NEW_GAME_GRID;
@@ -277,6 +386,9 @@ namespace GMS_LotteryTracker
             //DEBUG ONLY
             newWindowGrid.ShowGridLines = true;
 
+            //add the new grid to the uiref
+            uiref.newWindowGrid = newWindowGrid;
+
 
             //create the rows and cols
             for (int i = 0; i < ROW_NEW_WINDOW_GRID; i++)
@@ -290,7 +402,7 @@ namespace GMS_LotteryTracker
                 newWindowGrid.ColumnDefinitions.Add(col);
             }
 
-            //create the uis----------------------------------------------
+            //create the ui's----------------------------------------------
 
             //stack Panel for the buttons
             StackPanel stackPanel = new StackPanel();
@@ -303,6 +415,7 @@ namespace GMS_LotteryTracker
             newGameBtn.Height = 20;
             newGameBtn.Width = 200;
             newGameBtn.Margin = new Thickness(2);
+            uiref.gameBoxBtn = newGameBtn;
 
             //Search Window Button
             Button searchButton = new Button();
@@ -312,7 +425,7 @@ namespace GMS_LotteryTracker
             searchButton.Height = 20;
             searchButton.Width = 200;
             searchButton.Margin = new Thickness(2);
-
+            uiref.searchGridBtn = searchButton;
 
             //Debt Button
             Button debtBtn = new Button();
@@ -322,7 +435,7 @@ namespace GMS_LotteryTracker
             debtBtn.Height = 20;
             debtBtn.Width = 200;
             debtBtn.Margin = new Thickness(2);
-
+            uiref.debtLookUpBtn = debtBtn;
 
             //add the buttons to the stack panel
             stackPanel.Children.Add(newGameBtn);
@@ -331,7 +444,6 @@ namespace GMS_LotteryTracker
             Grid.SetColumnSpan(stackPanel, 2);
             Grid.SetRow(stackPanel, 1);
             Grid.SetColumn(stackPanel, 0);
-
 
             //add all to the uirefs
             //ui refs for the new game
@@ -379,6 +491,7 @@ namespace GMS_LotteryTracker
         private TabItem mainTab;
         private Grid_Factory gridFactory;
         private db_stick.db_stick db;
+        private theme_stick.Themes_Stick themes;
 
 
         //function to update the status of the Manager Tab
@@ -436,9 +549,10 @@ namespace GMS_LotteryTracker
             tabs = new List<TabItem>(); //init the tab item for the first time
             uirefs = new List<UI_REF>(); //inii the list for ui refs
             db = new db_stick.db_stick(connectionString); //initialize the db connection
+            themes = new theme_stick.Themes_Stick();
 
             //create the grid factory            
-            gridFactory = new Grid_Factory(uirefs, tabs, db);
+            gridFactory = new Grid_Factory(uirefs, tabs, db, themes);
 
             //init the main Control
             initMainControl();

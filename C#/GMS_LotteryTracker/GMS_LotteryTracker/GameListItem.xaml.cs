@@ -26,18 +26,36 @@ namespace GMS_LotteryTracker
     {
         bool isSelected; //if this item is selected
 
+        GAME_STATE gameState;
+
         private theme_stick.Themes_Stick themes = new Themes_Stick();
 
 
 
+        public enum GAME_STATE {
 
-        public enum GAME_STATE { 
-            ACTIVE = 0,
+            INACTIVE = -1,
+            RESULT_DAY = 0,
             RESULT_CLOSE = 1,
-            RESULT_DAY = 2,
-            INACTIVE = 3
+            ACTIVE = 4
+            
         }
 
+
+        private string getStateToString(GAME_STATE state) {
+            switch (state) {
+                case GAME_STATE.INACTIVE:
+                    return "INACTIVE";
+                case GAME_STATE.ACTIVE:
+                    return "ACTIVE";
+                case GAME_STATE.RESULT_CLOSE:
+                    return "RESULT_CLOSE";
+                case GAME_STATE.RESULT_DAY:
+                    return "RESULT_DAY";
+                default:
+                    return "INACTIVE";
+            }
+        }
 
 
         public LinearGradientBrush getBackGroundGradientBrush(GAME_STATE state) {
@@ -67,11 +85,46 @@ namespace GMS_LotteryTracker
 
 
         //constructor
-        public GameListItem(string gameName, Date createDate, Date gameDate)
+        public GameListItem(int gameID, string gameName, DateTime createDate, DateTime gameDate)
         {
             InitializeComponent();
 
+            //set up the item
+            //set the back ground as per the state
 
+            //get state
+            TimeSpan intervalDays = DateTime.Now - gameDate;
+            gameState = GAME_STATE.INACTIVE;
+
+
+            if (DateTime.Compare(gameDate, DateTime.Now) >= 0)
+            {
+                if (intervalDays.Days >= (int)GAME_STATE.ACTIVE)
+                    gameState = GAME_STATE.ACTIVE;
+
+                else if (intervalDays.Days < (int)GAME_STATE.ACTIVE &&
+                    intervalDays.Days >= (int)GAME_STATE.RESULT_CLOSE)
+                    gameState = GAME_STATE.RESULT_CLOSE;
+
+                else if (intervalDays.Days < (int)(GAME_STATE.RESULT_CLOSE) &&
+                    intervalDays.Days >= (int)GAME_STATE.RESULT_DAY)
+                    gameState = GAME_STATE.RESULT_DAY;
+            }
+            else {
+                gameState = GAME_STATE.INACTIVE;
+            }
+
+
+            //get the background
+            LinearGradientBrush brush = getBackGroundGradientBrush(gameState);
+
+            //set the background
+            MainGrid.Background = brush;
+            //set the other values of the item
+            gameNameOut.Content = "Game : " + gameID + " - " + gameName;
+            gameCreateDateOut.Content = createDate.ToString();
+            gameResultDayOut.Content = gameDate.ToString();
+            statusOut.Content = getStateToString(gameState);
 
         }
     }
