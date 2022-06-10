@@ -1,0 +1,141 @@
+﻿<UserControl x:Class="GMS_LotteryTracker.AddGamePopUp"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:GMS_LotteryTracker"
+             mc:Ignorable="d" Height="480" Width="800">
+
+    <Border BorderBrush="Black" BorderThickness="1" Height="480" Width="800">
+        <Grid x:Name="MainGrid" Background="White" Margin="0,0,-1,-1">
+
+            <Label Name="WindowTitleText" Content="Add Game" Margin="10,8,0,0" FontSize="20" FontWeight="Bold" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="384"/>
+
+            <Button Name="CloseBtn" Click="closePopup" Content="x" Foreground="Black" Background="Red" Margin="0,10,10,0" HorizontalAlignment="Right" Width="29" Height="25" VerticalAlignment="Top" />
+
+            <Label Name="GameTitleText" Content="Game Title : " Margin="10,71,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="86" />
+            <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Name="GameTitleIn" ToolTip="Enter Game Name" Margin="101,72,0,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="507" />
+
+            <Label Name="ResultTimeText" Content="Result Time : " Margin="10,118,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="86" />
+            <DatePicker Name="PickDate" Margin="101,118,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="113" />
+
+            <StackPanel Margin="219,118,0,0" Height="46" VerticalAlignment="Top" HorizontalAlignment="Left" Width="28">
+                <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Name="TimeHHIn" ToolTip="Hour [12 hr format]" Height="24"/>
+                <Label  Name="TimeHHText" Content="HH" ToolTip="Enter Hour [12 hr format]" Height="18" FontSize="7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Margin="252,118,0,0" Height="46" VerticalAlignment="Top" HorizontalAlignment="Left" Width="28">
+                <TextBox Name="TimeMMIn" ToolTip="Minutes" Height="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Label Name="TimeMMText" Content="MM" ToolTip="Enter Minutes" Height="18" FontSize="7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Margin="285,118,0,0" Height="46" VerticalAlignment="Top" HorizontalAlignment="Left" Width="28">
+                <TextBox Name="TimeSSIn" ToolTip="Seconds" Height="24" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+                <Label Name="TimeSSText" Content="SS" ToolTip="Enter Seconds" Height="18" FontSize="7" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </StackPanel>
+
+            <StackPanel Margin="322,120,0,0" Height="28" VerticalAlignment="Top" HorizontalAlignment="Left" Width="32">
+                <RadioButton Content="AM" GroupName="hourOfDay" Name="RadioAMBtn" FontSize="8" HorizontalAlignment="Left" VerticalAlignment="Top" />
+                <RadioButton Content="PM" GroupName="hourOfDay" Name="RadioPMBtn" FontSize="8" />
+            </StackPanel>
+
+            <Label Name="TicketText" Content="Total Tickets : " Margin="10,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="86" />
+            <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Name="TotalTicketIn" Margin="101,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" />
+            <Label Name="TicketSeriesText" Content="Tickets Stream : " Margin="194,180,0,0" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="94" />
+            <TextBox Name="TicketSeriesIn" Margin="293,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <Label Name="TicketBoughtAtText" Content="Tickets Bought At :" Margin="400,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" />
+            <TextBox Name="TicketBoughtAtIn" Margin="515,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+
+            <Label Name="PrizeCountText" Content="Prize Count : " Margin="10,240,0,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="86" />
+            <Slider Name="PrizeSlider"  Margin="101,247,0,0" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="15" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="345" ValueChanged="PrizeSlider_ValueChanged"/>
+            <Label Name="PrizeCountOut"  Content="{Binding ElementName=PrizeSlider, Path=Value, UpdateSourceTrigger=PropertyChanged}" Margin="451,242,0,0" Height="23" VerticalAlignment="Top" HorizontalAlignment="Left" Width="23"/>
+
+            <ScrollViewer Margin="10,277,0,0" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Disabled" Height="90" VerticalAlignment="Top" HorizontalAlignment="Left" Width="749">
+                <StackPanel Name="PrizeCountStackPanel" Orientation="Horizontal">
+                    <StackPanel Name="PrizeCount1Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount1IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" />
+                        <Label Name="PrizeCount1Text" Content="1st Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount2Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount2IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40" />
+                        <Label Name="PrizeCount2Text" Content="2nd Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount3Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount3IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount3Text" Content="3rd Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount4Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount4IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount4Text" Content="4th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount5Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount5IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount5Text" Content="5th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount6Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount6IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount6Text" Content="6th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount7Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount7IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount7Text" Content="7th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount8Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount8IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount8Text" Content="8th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount9Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount9IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount9Text" Content="9th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount10Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount10IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount10Text" Content="10th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount11Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount11IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount11Text" Content="11th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount12Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount12IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount12Text" Content="12th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount13Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount13IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount13Text" Content="13th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount14Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount14IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount14Text" Content="14th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+
+                    <StackPanel Name="PrizeCount15Box" Width="52" Height="49" Margin="3">
+                        <TextBox Name="PrizeCount15IN" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" Width="40"/>
+                        <Label Name="PrizeCount15Text" Content="15th Prize" FontSize="8" HorizontalContentAlignment="Center" VerticalContentAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" />
+                    </StackPanel>
+                </StackPanel>
+            </ScrollViewer>
+
+            <Label Name="GameDescText" Content="Game Description :" Margin="10,372,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="116"/>
+            <TextBox MaxLength="100" IsEnabled="True" Name="GameDescIn" Margin="131,372,0,0" Height="30" VerticalAlignment="Top" HorizontalAlignment="Left" Width="338"/>
+
+            <Label Name="StatusText" Content="Status : " Margin="10,0,0,10" VerticalContentAlignment="Center" HorizontalContentAlignment="Center" FontSize="18" Height="37" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="96"/>
+            <Label Name="StatusOut" Content="No Status Yet" Margin="101,0,0,10" VerticalContentAlignment="Center" HorizontalContentAlignment="Left" Height="37" VerticalAlignment="Bottom" HorizontalAlignment="Left" Width="373"/>
+
+            <Button Name ="InsertBtn" Content="Insert" Click="InsertBtn_Click" Margin="0,0,24,10" FontSize="18" FontWeight="Bold" HorizontalAlignment="Right" Width="90" Height="38" VerticalAlignment="Bottom" />
+        </Grid>
+    </Border>
+</UserControl>

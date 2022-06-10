@@ -7,12 +7,18 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
-    <Compile Update="GameListItem.xaml.cs">
+    <Compile Update="XUControls\AddGamePopUp.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="XUControls\GameListItem.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Page Update="GameListItem.xaml">
+    <Page Update="XUControls\AddGamePopUp.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="XUControls\GameListItem.xaml">
       <SubType>Designer</SubType>
     </Page>
     <Page Update="MainWindow.xaml">

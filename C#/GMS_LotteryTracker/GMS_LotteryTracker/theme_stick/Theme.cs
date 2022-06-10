@@ -16,6 +16,7 @@ namespace GMS_LotteryTracker.theme_stick
 
         public Color primaryColor;
         public Color SecondaryColor;
+        public Color FocusColor;
         public Color textColor;
 
         public Color highLightColor; //not in use - high light color for special purposes
@@ -27,15 +28,17 @@ namespace GMS_LotteryTracker.theme_stick
         {
             primaryColor = Brushes.AntiqueWhite.Color;
             SecondaryColor = Brushes.GhostWhite.Color;
+            FocusColor = Brushes.LightGray.Color;
             textColor = Brushes.Black.Color;
             highLightColor = Brushes.LimeGreen.Color;
             useBackGroundImage = false;
             backGroundImage = null;
         }
 
-        public Theme_Stick(Color primaryColor, Color secondaryColor, Color textColor, Color highLightColor, Image backGroundImage = null) { 
+        public Theme_Stick(Color primaryColor, Color secondaryColor, Color FocusColor, Color textColor, Color highLightColor, Image backGroundImage = null) { 
             this.primaryColor =  primaryColor;
             this.SecondaryColor = secondaryColor;
+            this.FocusColor = FocusColor;
             this.textColor = textColor;
             this.highLightColor = highLightColor;
             this.useBackGroundImage = (backGroundImage == null) ? false : true;
@@ -55,7 +58,7 @@ namespace GMS_LotteryTracker.theme_stick
 
             //add all the themes here
             themes.Add(new KeyValuePair<string, Theme_Stick>("Default White", new Theme_Stick()));
-            themes.Add(new KeyValuePair<string, Theme_Stick>("Dark Mode", new Theme_Stick(Brushes.Black.Color, Brushes.DarkGray.Color, Brushes.Gray.Color, Brushes.White.Color)));
+            themes.Add(new KeyValuePair<string, Theme_Stick>("Dark Mode", new Theme_Stick(Brushes.Black.Color, Brushes.DarkGray.Color, Brushes.Blue.Color, Brushes.Gray.Color, Brushes.White.Color)));
             
         }
         
