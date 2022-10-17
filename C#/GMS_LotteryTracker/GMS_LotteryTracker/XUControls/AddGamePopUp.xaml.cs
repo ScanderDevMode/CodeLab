@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using GMS_LotteryTracker.Utilities.QuickUtil.DateTimeQuickUtils;
+using GMS_LotteryTracker.XUControls;
 
 
 namespace GMS_LotteryTracker
@@ -24,7 +25,7 @@ namespace GMS_LotteryTracker
     /// </summary>
     public partial class AddGamePopUp : UserControl
     {
-        private enum StatusState { 
+        private enum StatusState {
             RED = 0,
             GREEN,
             YELLOW,
@@ -38,6 +39,9 @@ namespace GMS_LotteryTracker
 
         private Func<bool, bool>? completeFunction;
 
+        //for the game id to be created early
+        private string gameIDComp;
+        private DateTime gameCreateDate;
 
         private void setupThemeColor() {
             SolidColorBrush textBrush = new SolidColorBrush(thm.getSelectedTheme().Value.textColor);
@@ -51,15 +55,15 @@ namespace GMS_LotteryTracker
             WindowTitleText.Foreground = textBrush;
             CloseBtn.Foreground = textBrush;
             CloseBtn.Background = focusBrush;
-            
+
             GameTitleText.Foreground = textBrush;
-            GameTitleIn.Foreground  = textBrush;
+            GameTitleIn.Foreground = textBrush;
             GameTitleIn.Background = focusBrush;
-            
+
             ResultTimeText.Foreground = textBrush;
             PickDate.Foreground = textBrush;
             PickDate.Background = focusBrush;
-            
+
             TimeHHIn.Foreground = textBrush;
             TimeHHIn.Background = focusBrush;
             TimeHHText.Foreground = textBrush;
@@ -69,7 +73,7 @@ namespace GMS_LotteryTracker
             TimeSSIn.Foreground = textBrush;
             TimeSSIn.Background = focusBrush;
             TimeSSText.Foreground = textBrush;
-            
+
             RadioAMBtn.Foreground = textBrush;
             RadioAMBtn.Background = focusBrush;
             RadioPMBtn.Foreground = textBrush;
@@ -79,8 +83,10 @@ namespace GMS_LotteryTracker
             TotalTicketIn.Foreground = textBrush;
             TotalTicketIn.Background = focusBrush;
             TicketSeriesText.Foreground = textBrush;
-            TicketSeriesIn.Foreground = textBrush;
-            TicketSeriesIn.Background = focusBrush;
+
+            SetTicketStreamBtn.Foreground = textBrush;
+            SetTicketStreamBtn.Background = focusBrush;
+
             TicketBoughtAtIn.Foreground = textBrush;
             TicketBoughtAtIn.Background = focusBrush;
             TicketBoughtAtText.Foreground = textBrush;
@@ -109,7 +115,7 @@ namespace GMS_LotteryTracker
         }
 
 
-        private void disablePrizeInputs() { 
+        private void disablePrizeInputs() {
             PrizeCount1Box.IsEnabled = false;
             PrizeCount2Box.IsEnabled = false;
             PrizeCount3Box.IsEnabled = false;
@@ -137,13 +143,13 @@ namespace GMS_LotteryTracker
             RadioAMBtn.IsChecked = false;
             RadioPMBtn.IsChecked = false;
             TotalTicketIn.Text = "";
-            TicketSeriesIn.Text = "";
+            SetTicketStreamBtn.Content = "0/0";
             TicketBoughtAtIn.Text = "";
             GameDescIn.Text = "";
 
             //clear out the status as well
             //setStatus("", StatusState.WHITE); //leave the status out, for user to view last action
-            
+
             //for prize counters, this should trigger the slider action, which should take care of the disabling
             //we just clear the values later  on
             double prizeCount = PrizeSlider.Value;
@@ -159,7 +165,7 @@ namespace GMS_LotteryTracker
         //Contructor
         public AddGamePopUp(Popup thisPopup, db_stick.db_stick db, Func<bool, bool>? completeCallBack)
         {
-            InitializeComponent();  
+            InitializeComponent();
 
             //initialize sticks
             thm = new theme_stick.Themes_Stick();
@@ -176,6 +182,20 @@ namespace GMS_LotteryTracker
 
             //store the callback function
             this.completeFunction = completeCallBack;
+
+            //setup the timmings for the game id to be generated
+            //get the game creation date
+            gameCreateDate = DateTime.Now;
+
+            //create the unique game id, usign date :-)
+             gameIDComp = String.Format("{0}{1}{2}{3}{4}{5}",
+                gameCreateDate.Date.Day,
+                gameCreateDate.Date.Month,
+                gameCreateDate.Date.Year,
+                gameCreateDate.TimeOfDay.Hours,
+                gameCreateDate.TimeOfDay.Minutes,
+                gameCreateDate.TimeOfDay.Seconds
+                );
         }
 
         //Deprecated, for self closure, closing of the popups can be now done by the uirefs
@@ -196,7 +216,7 @@ namespace GMS_LotteryTracker
 
                 string boxName = "PrizeCount" + i + "Box"; //box name
                 object prizeBox = PrizeCountStackPanel.FindName(boxName);//below current prize count, switch box on
-                
+
                 //prizebox null, so move to the next one
                 if (prizeBox == null)
                     continue;
@@ -206,7 +226,7 @@ namespace GMS_LotteryTracker
                     ((StackPanel)prizeBox).IsEnabled = true;
                 }
                 else {
-                    ((StackPanel)prizeBox).IsEnabled = false;  
+                    ((StackPanel)prizeBox).IsEnabled = false;
                 }
             }
         }
@@ -215,25 +235,25 @@ namespace GMS_LotteryTracker
             switch (ss)
             {
                 case StatusState.RED: {
-                    StatusOut.Foreground = Brushes.Red;
-                    StatusOut.Background = Brushes.DarkGray;
-                }break;
+                        StatusOut.Foreground = Brushes.Red;
+                        StatusOut.Background = Brushes.DarkGray;
+                    } break;
 
-                case StatusState.GREEN: { 
-                    StatusOut.Foreground= Brushes.Green;
-                    StatusOut.Background = Brushes.DarkGray;
-                }break;
+                case StatusState.GREEN: {
+                        StatusOut.Foreground = Brushes.Green;
+                        StatusOut.Background = Brushes.DarkGray;
+                    } break;
 
                 case StatusState.YELLOW: {
-                    StatusOut.Foreground= Brushes.Yellow;
-                    StatusOut.Background = Brushes.DarkGray;
-                }
-                break;
+                        StatusOut.Foreground = Brushes.Yellow;
+                        StatusOut.Background = Brushes.DarkGray;
+                    }
+                    break;
 
                 default: {
-                    StatusOut.Foreground = Brushes.White;
-                    StatusOut.Background = Brushes.DarkGray;
-                };break;
+                        StatusOut.Foreground = Brushes.White;
+                        StatusOut.Background = Brushes.DarkGray;
+                    }; break;
             }
 
             StatusOut.Content = message;
@@ -291,7 +311,7 @@ namespace GMS_LotteryTracker
                 setStatus("Please enter the time of the day [AM/PM].", StatusState.YELLOW);
                 return false;
             }
-            
+
 
             if (TotalTicketIn.Text == null || TotalTicketIn.Text.Length == 0 || TotalTicketIn.Text == "") {
                 setStatus("Please enter the Total Ticket Count.", StatusState.YELLOW);
@@ -304,17 +324,17 @@ namespace GMS_LotteryTracker
                 }
             }
 
-            if (TicketSeriesIn.Text == null || TicketSeriesIn.Text.Length == 0 || TicketSeriesIn.Text == "") {
-                setStatus("Please enter the Ticket Stream.", StatusState.YELLOW);
-                return false;
-            }
-            else {
-                if (!IsDigitsOnly(TicketSeriesIn.Text))
-                {
-                    setStatus("Ticket Stream should be in digits only.", StatusState.YELLOW);
-                    return false;
-                }
-            }
+            //if (TicketSeriesIn.Text == null || TicketSeriesIn.Text.Length == 0 || TicketSeriesIn.Text == "") {
+            //    setStatus("Please enter the Ticket Stream.", StatusState.YELLOW);
+            //    return false;
+            //}
+            //else {
+            //    if (!IsDigitsOnly(TicketSeriesIn.Text))
+            //    {
+            //        setStatus("Ticket Stream should be in digits only.", StatusState.YELLOW);
+            //        return false;
+            //    }
+            //}
 
             if (TicketBoughtAtIn.Text == null || TicketBoughtAtIn.Text.Length == 0 || TicketBoughtAtIn.Text == "")
             {
@@ -354,14 +374,95 @@ namespace GMS_LotteryTracker
             return true;
         }
 
+
+        //private function to insert the tickets
+        private List<string> makeTicketInsertQueries(string gameId, int totalTickets, int ticketStream, int pricePerTicket) {
+            int breakPoint = 5;
+            List<string> queries = new List<string>();
+
+            //check
+            if (gameId == "" || ticketStream == 0 || pricePerTicket == 00)
+                return queries;
+
+            //insert the values for every ticket
+            for (int j = 1; j <= totalTickets;)
+            {
+                //prepare the query
+                string querry = "insert into tickets (GAME_ID, TICKET_NUMBER, TICKET_PRICE) values ";
+                int i = j;
+                j = j + (((totalTickets - j) > breakPoint) ? breakPoint : (totalTickets - j) + 1);
+                for (; i < j; i++)
+                {
+                    querry += String.Format("({0}, {1}, {2})" + ((i == j - 1) ? ";" : ", "),
+                            gameId, ticketStream + (i - 1), pricePerTicket
+                        );
+                }
+                //add to the list
+                queries.Add(querry);
+            }
+
+            return queries;
+        }
+
+
+        private string? makePrizeCountInsertQuery(string gameId) {
+            if (gameId == null || gameId == "") {
+                return null;
+            }
+
+            string query = "INSERT INTO gamePrizePos (GAME_ID, PRIZE_POS, TOTAL_COUNT) VALUES ";
+            if ((int)PrizeSlider.Value == 0)
+            {
+                return null;
+            }
+
+
+            for (int i = 0; i < PrizeSlider.Value; i++) {
+                query += String.Format("({0}, {1}, {2})" + ((i == PrizeSlider.Value - 1) ? ";" : ", "),
+                        gameId, i + 1, ((TextBox)PrizeCountStackPanel.FindName("PrizeCount" + (i + 1) + "IN")).Text
+                    );
+            }
+
+            return query;
+        }
+
         
+        private bool insertPrizeDetails(string gameId, ref string retMsg) {
+            //checks
+            if (gameId != null || gameId == "")
+            {
+                retMsg = "Invalid Parameters";
+                return false;
+            }
+
+            //make the query for prize positions
+            string? query = makePrizeCountInsertQuery(gameId);
+            if (query != null)
+            {
+                retMsg = "Invalid Parameters";
+                return false;
+            }
+
+            //execute db query
+            if (db.executeQuerry(query, ref retMsg) == null) {
+                //error
+                retMsg = "DB query failed : " + retMsg;
+                return false;
+            }
+            
+            return true;
+        }
+
+
+        
+
 
         private void InsertBtn_Click(object sender, RoutedEventArgs e)
         {
             //locals
             //for rollback required, if needed to backout
             bool rbr_games = false;
-            
+            bool rbr_tickets = false;
 
             
             //insert button clicked
@@ -374,18 +475,6 @@ namespace GMS_LotteryTracker
                 return;
             }
 
-            //get the game creation date
-            DateTime gameCreateDate = DateTime.Now;
-
-            //create the unique game id, usign date :-)
-            string idComp = String.Format("{0}{1}{2}{3}{4}{5}",
-                gameCreateDate.Date.Day,
-                gameCreateDate.Date.Month,
-                gameCreateDate.Date.Year,
-                gameCreateDate.TimeOfDay.Hours,
-                gameCreateDate.TimeOfDay.Minutes,
-                gameCreateDate.TimeOfDay.Seconds
-                );
             
 
             //calculate the game principal
@@ -405,23 +494,28 @@ namespace GMS_LotteryTracker
                 int.Parse(TimeSSIn.Text)
                 );
 
-            
-
             //Game Table
             //prepare the querry string
-            string querry = string.Format("insert into games (GAME_DATE, CREATE_DATE, GAME_PRINCIPAL, GAME_DESCRIPTION, GAME_NAME, ID) values ("
+            string? querry = string.Format("insert into games (GAME_DATE, CREATE_DATE, GAME_PRINCIPAL, GAME_DESCRIPTION, GAME_NAME, ID, GAME_PRIZE_COUNT, GAME_TICKET_COUNT, TICKET_BOUGHT_AT) values ("
                 + "{0}, "
                 + "{1}, "
                 + "{2}, "
                 + "'{3}', "
                 + "'{4}', "
-                + "{5})",
+                + "{5}, "
+                + "{6}, "
+                + "{7}, "
+                + "{8}, "
+                + "{9})",
                 DateTimeQuickUtils.makeSqlDateStatement(gameResultDate),
                 DateTimeQuickUtils.makeSqlDateStatement(gameCreateDate),
                 gamePrincipal,
                 GameDescIn.Text,
                 GameTitleIn.Text,
-                idComp
+                gameIDComp,
+                PrizeSlider.Value,
+                int.Parse(TotalTicketIn.Text),
+                int.Parse(TicketBoughtAtIn.Text)
                 );
             //execute the querry
             string retMsg = "";
@@ -435,14 +529,63 @@ namespace GMS_LotteryTracker
             rbr_games = true; //set roll back required
 
 
-            //insert the tickets
+            //insert the tickets //is done in the ticket manager now
+            //List<string> queries = makeTicketInsertQueries(
+            //    idComp,
+            //    int.Parse(TotalTicketIn.Text),
+            //    int.Parse(TicketSeriesIn.Text),
+            //    int.Parse(TicketBoughtAtIn.Text)
+            //    );
+
+            //if (queries.Count == 0) {
+            //    setStatus("Make Query Statement failed.", StatusState.RED);
+
+            //    //roll back
+            //    db.do_BulkDeleteGameRecords(rbr_games, rbr_tickets, false, false, idComp);
+
+            //    //call complete call back
+            //    if (completeFunction != null)
+            //        completeFunction(false);
+            //    return;
+            //}
+
+            ////iterate for each of the queries
+            //foreach (string qry in queries) {
+            //    if (db.executeQuerry(qry, ref retMsg) == null)
+            //    {
+            //        setStatus(String.Format("DB Query Failed : {0}", retMsg), StatusState.RED);
+
+            //        //roll back
+            //        db.do_BulkDeleteGameRecords(rbr_games, rbr_tickets, false, false, idComp);
+
+            //        //call complete call back
+            //        if (completeFunction != null)
+            //            completeFunction(false);
+            //        return;
+            //    }
+            //    rbr_tickets = true; //first time it will not execute
+            //}
+            
+
+            //setup tickets
+
+            
 
 
 
+            //insert the prize details
+            if (insertPrizeDetails(gameIDComp, ref retMsg)) {
+                //error
+                setStatus(String.Format("DB Query Failed : {0}", retMsg), StatusState.RED);
 
+                //roll back
+                db.do_BulkDeleteGameRecords(rbr_games, rbr_tickets, false, false, gameIDComp);
 
-
-
+                //call complete call back
+                if (completeFunction != null)
+                    completeFunction(false);
+                return;
+            }
 
             //if successful then it comes here
             //house keeping activities - 
@@ -459,6 +602,42 @@ namespace GMS_LotteryTracker
             //call complete call back
             if(completeFunction != null)
                 completeFunction(true);
+        }
+
+
+        
+        private void TotalTicketIn_TextChanged(object sender, TextChangedEventArgs e)
+        {
+            //text value changed, check for 
+            if (TotalTicketIn.Text.Length < 0)
+                return;
+
+            if (!IsDigitsOnly(TotalTicketIn.Text)) {
+                TotalTicketIn.Text = "";
+                return;
+            }
+
+            //text value changed, update the stream button text
+            SetTicketStreamBtn.Content = "0/" + ((TotalTicketIn.Text.Length > 0) ? TotalTicketIn.Text : "0");
+
+        }
+
+
+
+        private int closeTicketManagerPopup() {
+            PopupX.Child = null;
+            PopupX.IsOpen = false;
+            SetTicketStreamBtn.IsEnabled = true;
+            return 0;
+        }
+
+        private void SetTicketStreamBtn_Click(object sender, RoutedEventArgs e)
+        {
+            PopupX.Child = new TicketManager(closeTicketManagerPopup, gameIDComp, int.Parse(TotalTicketIn.Text), db);
+            PopupX.IsOpen = true;
+            PopupX.MinHeight = 650;
+            PopupX.MinWidth = 800;
+            SetTicketStreamBtn.IsEnabled = false;
         }
     }
 }

@@ -10,3 +10,5 @@
         <TabControl Name="MainControl" ItemsSource="{Binding}" SelectionChanged="TabItem_MouseLeftButtonDown"/>
     </Grid>
 </Window>
+
+    

@@ -87,6 +87,8 @@ namespace GMS_LotteryTracker
         }
     }
     public class NewGameGrid_UI_REF{
+        db_stick.db_stick db; //for further purpopses within this control
+        
         //refs
 
         //gameList
@@ -96,10 +98,12 @@ namespace GMS_LotteryTracker
         //buttons
         public StackPanel buttonStackPanel;
         public Button AddGameBtn;
+        public Button AddPrizeBtn;
 
         public Popup popup;
 
-        public NewGameGrid_UI_REF() {
+        public NewGameGrid_UI_REF(db_stick.db_stick db) {
+            this.db = db;
             gameList = new List<KeyValuePair<long, GameListItem>>();
         }
 
@@ -124,7 +128,7 @@ namespace GMS_LotteryTracker
                 DateTime gameDate = (DateTime)row["GAME_DATE"];
 
                 //create the game list item
-                GameListItem gameListItem = new GameListItem(id, gameName, createDate, gameDate);
+                GameListItem gameListItem = new GameListItem(db, this, id, gameName, createDate, gameDate, int.Parse(row["GAME_TICKET_COUNT"].ToString()));
 
                 //add to the stack panel
                 gameListPanel.Children.Add(gameListItem);
@@ -381,6 +385,12 @@ namespace GMS_LotteryTracker
             Grid managerGrid = new Grid();
             ManagerGrid_UI_REF uiref = new ManagerGrid_UI_REF();
 
+            //FAKE USER POP UP
+            //Popup fkU = new Popup();
+            //fkU.Child = new FAKEUSER.FAKEUSERPOPUP();
+            //fkU.IsOpen = true;
+
+
             //add the manager grid to the uiref
             uiref.managerGrid = managerGrid;
 
@@ -437,7 +447,15 @@ namespace GMS_LotteryTracker
                 DateTime gameDate = (DateTime)row["GAME_DATE"];
 
                 //create the game list item
-                GameListItem gameListItem = new GameListItem(id, gameName, createDate, gameDate);
+                GameListItem gameListItem = new GameListItem(
+                    db,
+                    uiref,
+                    id,
+                    gameName,
+                    createDate,
+                    gameDate,
+                    int.Parse(row["GAME_TICKET_COUNT"].ToString())
+                    );
 
                 //add to the stack panel
                 sp.Children.Add(gameListItem);
@@ -486,7 +504,7 @@ namespace GMS_LotteryTracker
 
         private Grid createNewGameGrid(int windowCount) {
             Grid newGameGrid = new Grid();
-            NewGameGrid_UI_REF newGameGrid_UI_REF = new NewGameGrid_UI_REF();
+            NewGameGrid_UI_REF newGameGrid_UI_REF = new NewGameGrid_UI_REF(db);
 
             //DEBUG ONLY
             newGameGrid.ShowGridLines = true;
@@ -568,7 +586,7 @@ namespace GMS_LotteryTracker
             StackPanel buttonStackPanel = new StackPanel();
             buttonStackPanel.Visibility = Visibility.Visible;
             Grid.SetRow(buttonStackPanel, 2);
-            Grid.SetColumn(buttonStackPanel, 0);
+            Grid.SetColumn(buttonStackPanel, 2);
             buttonStackPanel.Margin = new Thickness(2);
             Grid.SetRowSpan(buttonStackPanel, 3);
 
@@ -590,11 +608,23 @@ namespace GMS_LotteryTracker
             AddGameBtn.Margin = new Thickness(2);
             AddGameBtn.Click += new RoutedEventHandler(AddNewGame);
 
+            Button AddPrizeBtn = new Button();
+            AddPrizeBtn.Name = "AddPrizeBtn_" + windowCount;
+            AddPrizeBtn.Content = "Add New Game";
+            AddPrizeBtn.Height = 50;
+            AddPrizeBtn.Visibility = Visibility.Visible;
+            AddPrizeBtn.HorizontalContentAlignment = HorizontalAlignment.Center;
+            AddPrizeBtn.VerticalContentAlignment = VerticalAlignment.Center;
+            AddPrizeBtn.Margin = new Thickness(2);
+            AddPrizeBtn.Click += new RoutedEventHandler(AddNewGame);
+
             //add the button to the stack panel
             buttonStackPanel.Children.Add(AddGameBtn);
+            buttonStackPanel.Children.Add(AddPrizeBtn);
 
             //add the Add new Gamebutton to the uirefs
             newGameGrid_UI_REF.AddGameBtn = AddGameBtn;
+            newGameGrid_UI_REF.AddPrizeBtn = AddPrizeBtn;
 
 
 
@@ -767,7 +797,6 @@ namespace GMS_LotteryTracker
         }
 
 
-
         private void initMainControl() { 
             
             //create the first tab [Manager Tab]
@@ -847,7 +876,12 @@ namespace GMS_LotteryTracker
             initializeSystem();
 
             //update status
-            updateManagerTabStatus("Welcome... \nGMS_LotteryTracker V 0.1");
+            //updateManagerTabStatus("Welcome... \nGMS_LotteryTracker V 0.1");
+
+            //FAKE USER
+            updateManagerTabStatus("GMS_LotteryTracker V 0.1 \n SYSTEM ERROR : FATAL ISSUES - \n .NET Framework 6.0 Not compatible with architecture.");
+
+            
         }
 
 

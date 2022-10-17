@@ -9,6 +9,8 @@
     <Border BorderBrush="Black" BorderThickness="1" Height="480" Width="800">
         <Grid x:Name="MainGrid" Background="White" Margin="0,0,-1,-1">
 
+            <Popup Name="PopupX" Placement="MousePoint" HorizontalOffset="-100" VerticalOffset="-100" AllowsTransparency="false" IsOpen="False"/>
+
             <Label Name="WindowTitleText" Content="Add Game" Margin="10,8,0,0" FontSize="20" FontWeight="Bold" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="384"/>
 
             <Button Name="CloseBtn" Click="closePopup" Content="x" Foreground="Black" Background="Red" Margin="0,10,10,0" HorizontalAlignment="Right" Width="29" Height="25" VerticalAlignment="Top" />
@@ -40,11 +42,11 @@
             </StackPanel>
 
             <Label Name="TicketText" Content="Total Tickets : " Margin="10,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="86" />
-            <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Name="TotalTicketIn" Margin="101,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" />
-            <Label Name="TicketSeriesText" Content="Tickets Stream : " Margin="194,180,0,0" Height="35" VerticalAlignment="Top" HorizontalAlignment="Left" Width="94" />
-            <TextBox Name="TicketSeriesIn" Margin="293,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
-            <Label Name="TicketBoughtAtText" Content="Tickets Bought At :" Margin="400,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" />
-            <TextBox Name="TicketBoughtAtIn" Margin="515,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
+            <TextBox VerticalContentAlignment="Center" HorizontalContentAlignment="Center" Name="TotalTicketIn" TextChanged="TotalTicketIn_TextChanged" Margin="101,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" />
+            <Label Name="TicketSeriesText" Content="Tickets Stream : " Margin="194,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="94" />
+            <Button Name="SetTicketStreamBtn" Content="0/0" Margin="293,180,0,0" HorizontalAlignment="Left" Width="181" Height="29" VerticalAlignment="Top" Click="SetTicketStreamBtn_Click"/>
+            <Label Name="TicketBoughtAtText" Content="Tickets Bought At :" Margin="515,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="110" RenderTransformOrigin="1.051,0.567" />
+            <TextBox Name="TicketBoughtAtIn" Margin="630,180,0,0" Height="29" VerticalAlignment="Top" HorizontalAlignment="Left" Width="78" VerticalContentAlignment="Center" HorizontalContentAlignment="Center"/>
 
             <Label Name="PrizeCountText" Content="Prize Count : " Margin="10,240,0,0" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="86" />
             <Slider Name="PrizeSlider"  Margin="101,247,0,0" TickPlacement="BottomRight" TickFrequency="1" IsSnapToTickEnabled="True" Maximum="15" Height="27" VerticalAlignment="Top" HorizontalAlignment="Left" Width="345" ValueChanged="PrizeSlider_ValueChanged"/>

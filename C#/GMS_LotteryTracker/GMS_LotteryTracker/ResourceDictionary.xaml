@@ -6,4 +6,11 @@
             <TextBlock x:Name="StatusText" Text="Welcome..." FontSize="10"/>
         </Grid>
     </DataTemplate>
+
+    <BitmapImage x:Key="ticketSold" UriSource="Images/TicketSoldIcon.png" />
+    <BitmapImage x:Key="ticketNotSold" UriSource="Images/TicketNotSoldIcon.png" />
+    <BitmapImage x:Key="ticketReturned" UriSource="Images/TicketReturnedIcon.png" />
+    <BitmapImage x:Key="ticketSelectedRect" UriSource="Images/TicketSelectedRect.png" />
+    <BitmapImage x:Key="ticketHoverRect" UriSource="Images/TicketHoverRect.png" />
+
 </ResourceDictionary>

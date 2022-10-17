@@ -7,14 +7,29 @@
     </ApplicationDefinition>
   </ItemGroup>
   <ItemGroup>
+    <Compile Update="FAKEUSER\FAKEUSERPOPUP.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Update="XUControls\AddGamePopUp.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Update="XUControls\GameListItem.xaml.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Update="XUControls\TicketManager.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="XUControls\TicketStreamBlock.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Update="XUControls\WarningPopup.xaml.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
+    <Page Update="FAKEUSER\FAKEUSERPOPUP.xaml">
+      <SubType>Designer</SubType>
+    </Page>
     <Page Update="XUControls\AddGamePopUp.xaml">
       <SubType>Designer</SubType>
     </Page>
@@ -24,7 +39,13 @@
     <Page Update="MainWindow.xaml">
       <SubType>Designer</SubType>
     </Page>
-    <Page Update="ResourceDictionary.xaml">
+    <Page Update="XUControls\TicketManager.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="XUControls\TicketStreamBlock.xaml">
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Update="XUControls\WarningPopup.xaml">
       <SubType>Designer</SubType>
     </Page>
   </ItemGroup>

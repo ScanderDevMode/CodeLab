@@ -22,12 +22,18 @@ namespace GMS_LotteryTracker.db_stick
 
 
 
-        public DataTable? executeQuerry(string queryString, ref string errorMessage) {
+        public DataTable? executeQuerry(string? queryString, ref string errorMessage) {
             if (connectionString == null)
             {
-                errorMessage = "Invalid QueryString";
+                errorMessage = "Database not initialized properly.";
                 return null; //check and return if connection string missing
             }
+
+            if (queryString == null || queryString == "") {
+                errorMessage = "Invalid Query String";
+                return null;
+            }
+
             DataTable output = new DataTable(); //create the output table
 
             try
@@ -53,6 +59,37 @@ namespace GMS_LotteryTracker.db_stick
         public DataTable? get_All_Games(ref string retMsg) {
             //create and execute the querry
             return executeQuerry("SELECT * FROM games", ref retMsg);
+        }
+
+
+        //private function to do roll back of an entered game
+        public void do_BulkDeleteGameRecords(bool rbr_games, bool rbr_tickets, bool rbr_gamesPrizePos, bool rbr_prizeList, string gameId)
+        {
+            string retMsg = "";
+
+            //for games
+            if (rbr_games)
+            {
+                //do the roll back here for game inserted
+                executeQuerry(string.Format("DELETE FROM games WHERE ID = {0}", gameId), ref retMsg);
+            }
+
+            //for tickets
+            if (rbr_tickets)
+            {
+                //do the roll backs for the tickets
+                executeQuerry(string.Format("DELETE FROM tickets WHERE GAME_ID = {0}", gameId), ref retMsg);
+            }
+
+            if (rbr_gamesPrizePos) {
+                //do the roll backs for the prize
+                executeQuerry(string.Format("DELETE FROM gamePrizePos WHERE GAME_ID = {0}", gameId), ref retMsg);
+            }
+
+            if (rbr_prizeList) {
+                //do the roll backs for the prize list
+                executeQuerry(string.Format("DELETE FROM prizeList WHERE GAME_ID = {0}", gameId), ref retMsg);
+            }
         }
 
     }
