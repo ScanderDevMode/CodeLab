@@ -1,0 +1,20 @@
+{
+  "name": "BlueAR",
+  "version": "0.0.1",
+  "description": "A library to connect to any bluetooth module, with apis for the basic features.",
+  "keywords": "bluetooth, HC05, connect, blue, tooth, AR",
+  "authors": [
+    {
+      "name": "TheClownDev",
+      "email": "amitkrdas17@gmail.com",
+      "maintainer": true
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+    "featherfly/SoftwareSerial": "^1.0"
+  },
+  "frameworks": "*",
+  "platforms": "*",
+  "headers": [ "./include/BlueAR.h" ]
+}

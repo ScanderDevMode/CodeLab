@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Path>C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.7/bin;C:/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v11.7/libnvvp;C:/Program Files (x86)/Common Files/Intel/Shared Libraries/redist/intel64/compiler;C:/Windows/system32;C:/Windows;C:/Windows/System32/Wbem;C:/Windows/System32/WindowsPowerShell/v1.0/;C:/Windows/System32/OpenSSH/;C:/Program Files (x86)/NVIDIA Corporation/PhysX/Common;C:/Program Files/NVIDIA Corporation/NVIDIA NvDLISR;C:/Program Files/dotnet/;C:/Program Files/Git/cmd;C:/Program Files/Microsoft SQL Server/150/Tools/Binn/;C:/Program Files/Microsoft SQL Server/Client SDK/ODBC/170/Tools/Binn/;C:/Program Files/NVIDIA Corporation/Nsight Compute 2022.2.1/;C:/WINDOWS/system32;C:/WINDOWS;C:/WINDOWS/System32/Wbem;C:/WINDOWS/System32/WindowsPowerShell/v1.0/;C:/WINDOWS/System32/OpenSSH/;C:/Users/amitk/AppData/Local/Programs/Python/Python310/Scripts/;C:/Users/amitk/AppData/Local/Programs/Python/Python310/;C:/Users/amitk/AppData/Local/Microsoft/WindowsApps;C:/Users/amitk/.dotnet/tools;C:/Program Files/JetBrains/PyCharm Community Edition 2022.2.2/bin;C:/Users/amitk/.platformio/penv/Scripts</Path>
+  </PropertyGroup>
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{0FA9C3A8-452B-41EF-A418-9102B170F49F}</ProjectGuid>
+    <Keyword>MakeFileProj</Keyword>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Makefile</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v120</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <NMakeBuildCommandLine>platformio -f -c visualstudio run</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>platformio -f -c visualstudio run --target clean</NMakeCleanCommandLine>
+    <NMakePreprocessorDefinitions>PLATFORMIO=60104;ARDUINO_AVR_UNO;DEBUG;F_CPU=16000000L;ARDUINO_ARCH_AVR;ARDUINO=10808;__PLATFORMIO_BUILD_DEBUG__;__AVR_ATmega328P__</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>D:/Work/Codes/C/lidcap/Twilight_IO/include;D:/Work/Codes/C/lidcap/Twilight_IO/src;D:/Work/Codes/C/lidcap/Twilight_IO/lib/BlueAR/include;D:/Work/Codes/C/lidcap/Twilight_IO/lib/BlueAR/src;D:/Work/Codes/C/lidcap/Twilight_IO/.pio/libdeps/uno_deb/SoftwareSerial;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/cores/arduino;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/variants/standard;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/HID/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/SPI/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/Wire/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/toolchain-atmelavr/avr/include</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <NMakeBuildCommandLine>platformio run</NMakeBuildCommandLine>
+    <NMakeCleanCommandLine>platformio run --target clean</NMakeCleanCommandLine>
+    <NMakePreprocessorDefinitions>PLATFORMIO=60104;ARDUINO_AVR_UNO;DEBUG;F_CPU=16000000L;ARDUINO_ARCH_AVR;ARDUINO=10808;__PLATFORMIO_BUILD_DEBUG__;__AVR_ATmega328P__</NMakePreprocessorDefinitions>
+    <NMakeIncludeSearchPath>D:/Work/Codes/C/lidcap/Twilight_IO/include;D:/Work/Codes/C/lidcap/Twilight_IO/src;D:/Work/Codes/C/lidcap/Twilight_IO/lib/BlueAR/include;D:/Work/Codes/C/lidcap/Twilight_IO/lib/BlueAR/src;D:/Work/Codes/C/lidcap/Twilight_IO/.pio/libdeps/uno_deb/SoftwareSerial;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/cores/arduino;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/variants/standard;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/EEPROM/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/HID/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/SPI/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/SoftwareSerial/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/framework-arduino-avr/libraries/Wire/src;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/toolchain-atmelavr/lib/gcc/avr/7.3.0/include-fixed;$(HOMEDRIVE)$(HOMEPATH)/.platformio/packages/toolchain-atmelavr/avr/include</NMakeIncludeSearchPath>
+  </PropertyGroup>
+  <ItemDefinitionGroup>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ItemGroup>
+    <None Include="lib\BlueAR\library.json" />
+    <None Include="platformio.ini" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="lib\BlueAR\src\BlueAR.cpp" />
+    <ClCompile Include="src/main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="lib\BlueAR\include\BlueAR.h" />
+    <ClInclude Include="lib\BlueAR\include\BlueAR_Internals.h" />
+  </ItemGroup>
+</Project>

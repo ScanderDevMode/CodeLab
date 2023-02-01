@@ -1,0 +1,46 @@
+Author : TheClownDev
+Dated : 21-10-2022
+
+"Hello All this is a simple project to make an ambient lighting system for computers.
+The Idea behind the project is to create a system which can change the led lights attached to it,
+according to the different inputs (Audio, Screen Ambience, Random, & Selectable Modes).
+The project uses visual studio for all the windows based coding, along with PlatformIO integration for
+the IOT part."
+
+
+
+Setting up the project ->
+
+Please foollow along to setup the project at your end.
+
+Prerequisites ->
+
+[Hardware]
+1. A computer
+2. An Arduino
+3. HC05 Bluetooth Module
+4. Some cables to connect all the stuff up.
+5. And a bluetooth adaptor for the pc [i.e. if you motherboard do not have built in bluetooth]
+6. And a coil of RGB LEDs.
+
+***NOTE : [Follow the connection isntructions to connect the Board with the HC05 and the ligts]
+
+
+[Software]
+1. Visual studio (Installed)
+2. Arudino IDE (Installed) [This is to install the required drivers for the IOT board you are using.]
+3. PlatformIO Core/CLI (Installed)
+
+
+Steps ->
+
+***NOTE : [Before starting with loading up the project in visual studio, you should open up Ardunio IDE and update
+the drivers for the board you are using. When you open up the Arduino IDE (While keeping the board
+plugged in to the USB), Arduino IDE will automatically detect the attached board and download the related \
+drivers. Id this is not the case for you, then you can use 'tools->boards->board manager' to install the
+latest drivers for the board you are using.]
+
+
+1. Repo the project at your end.
+2. Open up the lidcap.sln solution in visual studio.
+3. Build the project. [Building the project should automatically upload the firmware to your board]

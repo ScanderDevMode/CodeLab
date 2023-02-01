@@ -1,6 +1,6 @@
 /*
 * Screen Capture Library 1.02
-* Author - Amit Kr. Das
+* Author - TheClownDev
 * 
 * A small and simple library to do some screen capturing and saving as bmp Image.
 * Provides a small ammount of other functionalities involving captured images or capturing images.
@@ -149,7 +149,9 @@ SCColor getDominantColor(HBITMAP hBitmap, PColorHistogram* colHist, int* histSiz
 * Used to get a dominant color out of a given Monitor index.
 *
 * Params -
-* monitorIndex - Index of the monitor to be searched for dominant color.
+* monitorIndex - The index of the monitor to be captured. Index of monitors starts from 1.
+* >>> 0 - passing 0 will capture the primary screen.
+* >>>-1 - passing -1 will capture all the screens together. <TODO - Buggy>
 * colHist - An histogram of Colors, can be NULL if not needed.
 * histSize - Pointer to an integer where the size of the Color Histogram will be returned.
 * domIndex - Pointer to an integer Array where the index of the top 4 dominant color in the histogram Array will be returned.

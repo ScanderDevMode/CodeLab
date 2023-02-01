@@ -201,7 +201,7 @@ HBITMAP capForStream(int monitorIndex, unsigned int compIntensity) {
 	hBitmap = SelectObject(hMemoryDC, hOldBitmap); //reverse the selection in the hMemoryDC, and get back the hBitMap in which the image data is there
 
 	//debug - remove
-	writeDIB("E:/Work/Codes/C/lidcap/ScreenCap/test/index_N1.bmp", hBitmap, NULL);
+	//writeDIB("E:/Work/Codes/C/lidcap/ScreenCap/test/index_N1.bmp", hBitmap, NULL);
 
 	//delete unwanted DC's
 	DeleteDC(hMemoryDC);
