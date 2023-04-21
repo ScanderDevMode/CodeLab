@@ -90,20 +90,66 @@ namespace _FireDrive_ {
 		* password = the password to be used while logging in
 		* exception = refference to a FireDriveException object
 		* callback = a callback function to be called at the end of the operation completion. Can be NULL.
+		* 
+		* Returns true if function executed successfully, false if not.
 		*/
-		virtual std::shared_ptr<const std::string> SignInUser(const char* email, const char* password, FireDriveException& exception, _OnCompletionCallBack callback = NULL) = 0;
+		virtual bool SignInUser(const char* email, const char* password, FireDriveException& exception, _OnCompletionCallBack callback = NULL) = 0;
 
+
+		/*LogOut Function
+		* Logs a user out, if currently logged in
+		*
+		* Returns true if user found and logged out successfully and also when no user is logged in, false if not able to log out the user.
+		*/
+		virtual bool LogOut() const = 0;
+
+
+
+		/*IsSignedIn Function
+		* Checks wether the user is signed in or not
+		* 
+		* Returns true if signed in, false if not
+		*/
+		virtual bool IsSignedIn() const = 0;
 
 	};
 
 
-	class FireDrive : public FireDriveAuthentication, public FireDriveUtility {
+	//interface class for firbase User Details Querries
+	class FireDriveUser {
+	public:
+
+		/*GetCurrentUserUID Function
+		* Returns the UID of the current logged in user
+		*
+		* Returns the user UID in string if user is logged in, else returns NULL
+		*/
+		virtual std::shared_ptr<const std::string> GetCurrentUserUID() const = 0;
+
+
+		/*GetCurrentUserDispName Function
+		* Returns the display name of the current logged in user
+		* 
+		* Returns the user display name in string if user is logged in, else returns NULL
+		*/
+		virtual std::shared_ptr<const std::string> GetCurrentUserDispName() const = 0;
+
+
+		/*IsSignedIn Function
+		* Checks wether the user is signed in or not
+		*
+		* Returns true if signed in, false if not
+		*/
+		virtual bool IsSignedIn() const = 0;
+	};
+
+	class FireDrive : public FireDriveAuthentication, public FireDriveUtility, public FireDriveUser {
 	private:
 		void* appOptions;
 		void* app;
+		mutable void* user;
 
 		std::shared_ptr<std::string> fileData;
-		std::shared_ptr<std::string> userUID;
 
 		//blocked functions
 		FireDrive(const FireDrive& obj);
@@ -168,7 +214,39 @@ namespace _FireDrive_ {
 		* exception = refference to a FireDriveException object
 		* callback = a callback function to be called at the end of the operation completion. Can be NULL.
 		*/
-		std::shared_ptr<const std::string> SignInUser(const char* email, const char* password, FireDriveException& exception, _OnCompletionCallBack callback = NULL) override;
+		bool SignInUser(const char* email, const char* password, FireDriveException& exception, _OnCompletionCallBack callback = NULL) override;
+
+
+		/*IsSignedIn Function
+		* Checks wether the user is signed in or not
+		*
+		* Returns true if signed in, false if not
+		*/
+		bool IsSignedIn() const override;
+
+
+		/*LogOut Function
+		* Logs a user out, if currently logged in
+		*
+		* Returns true if user found and logged out successfully and also when no user is logged in, false if not able to log out the user.
+		*/
+		bool LogOut() const;
+
+
+		/*GetCurrentUserUID Function
+		* Returns the UID of the current logged in user
+		*
+		* Returns the user UID in string if user is logged in, else returns NULL
+		*/
+		std::shared_ptr<const std::string> GetCurrentUserUID() const override;
+
+
+		/*GetCurrentUserDispName Function
+		* Returns the display name of the current logged in user
+		*
+		* Returns the user display name in string if user is logged in, else returns NULL
+		*/
+		std::shared_ptr<const std::string> GetCurrentUserDispName() const override;
 	};
 
 

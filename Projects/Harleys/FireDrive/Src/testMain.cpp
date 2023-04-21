@@ -12,7 +12,7 @@ using namespace _FireDrive_;
 //test call back function
 void onCreateCallBack(bool res) {
 	if (res)
-		printf("User created \n");
+		printf("User Signed In... \n");
 }
 
 
@@ -22,8 +22,6 @@ int main(int argc, char** argv) {
 	const char* fileData = "{\"project_info\":{\"project_number\":\"944286589208\",\"project_id\":\"harleys-4e431\",\"storage_bucket\":\"harleys-4e431.appspot.com\"},\"client\":[{\"client_info\":{\"mobilesdk_app_id\":\"1:944286589208:android:a38fcecfed8f888900be6d\",\"android_client_info\":{\"package_name\":\"com.ThreeDSSofts.Harleys\"}},\"oauth_client\":[{\"client_id\":\"944286589208-jktrtfp0ir11hbhhmpbqlffjp6q2abk9.apps.googleusercontent.com\",\"client_type\":3}],\"api_key\":[{\"current_key\":\"AIzaSyCduPJviqlQn1S-zbPm56Zrwt-QXL2xYCk\"}],\"services\":{\"appinvite_service\":{\"other_platform_oauth_client\":[{\"client_id\":\"944286589208-jktrtfp0ir11hbhhmpbqlffjp6q2abk9.apps.googleusercontent.com\",\"client_type\":3},{\"client_id\":\"944286589208-rl1q45qndnofe3oe0vi94e8ufhop5pas.apps.googleusercontent.com\",\"client_type\":2,\"ios_info\":{\"bundle_id\":\"com.3dsSofts.Harleys\"}}]}}}],\"configuration_version\":\"1\"}";
 	FireDriveException exception;
 
-
-
 	//FireDrive *fd = new FireDrive("", "AIzaSyCUaPyjW2gvvrXBqIGP3QoRXpsIurUAiWU", "harleys-4e431", "9442866589208");
 
 	FireDrive* fd = new FireDrive(fileData, strlen(fileData));
@@ -32,9 +30,24 @@ int main(int argc, char** argv) {
 	auto fileStr = fd->getJsonConfigFileData();
 
 	//create a new user
-	fd->CreateUser("amitkrdas19@gmail.com", "am_p0qpl", exception, onCreateCallBack);
+	fd->CreateUser("amitkrdas20@gmail.com", "am_p0qpl", exception, onCreateCallBack);
+
+	//sign-in user
+	//fd->SignInUser("amitkrdas20@gmail.com", "am_p0qpl", exception, onCreateCallBack);
+	
+
+	//wait for the login to happen
+	while (!fd->IsSignedIn());
 
 
+	//Print the user Details
+	std::shared_ptr<const std::string> displayName = fd->GetCurrentUserDispName();
+	std::shared_ptr<const std::string> uid = fd->GetCurrentUserUID();
+	//printf("User -> %s", displayName.get()->c_str());
+	//printf("UID -> %s", uid.get()->c_str());
+
+	//sign out
+	fd->LogOut();
 
 	//delete and see the FireDrive class exiting
 	delete fd;

@@ -30,6 +30,7 @@ namespace _FireDrive_ {
 	//internal defines
 #define AO_V2A(x) ((AppOptions*)x) //caster for void pointer to AppOptions Pointer
 #define AP_V2A(x) ((App*)x) //caster for void pointer to App Pointer
+#define US_V2A(x) ((firebase::auth::User*)x) //caster for void pointer to firebase::auth::User pointer, to convert the result returned by a callback
 #define CDEL(x) if(x != NULL)delete x //deletes the x if it exists
 
 
@@ -104,9 +105,13 @@ namespace _FireDrive_ {
 	void FireDrive::operator=(const FireDrive& obj) {}
 
 	FireDrive::~FireDrive() {
+		if (IsSignedIn())
+			LogOut();
+
 		//delete the appOptions
 		CDEL(AO_V2A(appOptions));
 		CDEL(AP_V2A(app));
+		//CDEL(US_V2A(user)); //as we are returning or storing the ref to the original, we dont need to delete it
 	}
 
 	std::shared_ptr<const std::string> FireDrive::getJsonConfigFileData() {
@@ -118,27 +123,14 @@ namespace _FireDrive_ {
 		//get Auth class object
 		auth::Auth* _auth = auth::Auth::GetAuth(AP_V2A(app));
 
-		//create the user
-		Future<auth::User*> result = _auth->CreateUserWithEmailAndPassword(email, password);
-
-		//pre check if failed
-		if (result.status() == kFutureStatusComplete || result.status() == kFutureStatusInvalid) {
-			if (result.error() == auth::kAuthErrorNone) {
-
-				return true;
-			}
-			else {
-				//already failed for some reason
-				//handle exception
-				FireDriveException fde(UNKNOWN_EXCEPTION, result.error_message());
-				exception = fde;
-				return false;
-			}
-		}
-		
+		//pointer to the user pointer
+		void** userPointer = &user;
 
 		//declare lamda function for the call back - only registers when pending
-		auto callBFunc = [callback, &exception](const Future<auth::User*>& _result) -> void {
+		//callback - is the function to be called at the end, which was provided by the user
+		//exception - is the exception object, which is to contain the exception details if any
+		//userPointer - pointer to the user pointer to be initialized with the result user details
+		auto callBFunc = [callback, &exception, userPointer](const Future<auth::User*>& _result) -> void {
 			std::string customessage = "";
 			bool res = false;
 
@@ -150,6 +142,13 @@ namespace _FireDrive_ {
 				if (_result.error() == auth::kAuthErrorNone) {
 					//success
 					res = true;
+
+					//store the user details in the local memory
+					firebase::auth::User* _user = *_result.result();
+					/*int userClasslen = sizeof(firebase::auth::User);
+					*userPointer = calloc(userClasslen, 1);
+					memcpy_s(*userPointer, userClasslen, _user, userClasslen);*/
+					*userPointer = (void*)_user;
 				}
 				else {
 					//error
@@ -171,40 +170,151 @@ namespace _FireDrive_ {
 			}
 
 			//call the callback provided by user if not NULL
-			if(callback)
+			if (callback)
 				userCallBack(res);
 		};
+
+		//create the user
+		Future<auth::User*> result = _auth->CreateUserWithEmailAndPassword(email, password);
 
 		//resgister the call back function
 		result.OnCompletion(callBFunc);
 
-		return true; //return true for pending
-	}
 
-	std::shared_ptr<const std::string> FireDrive::SignInUser(const char* email, const char* password, FireDriveException& exception, _OnCompletionCallBack callback) {
-		
-		//get Auth
-		auth::Auth* _auth = auth::Auth::GetAuth(AP_V2A(app));
-
-		//sign in
-		Future<auth::User*> result = _auth->SignInWithEmailAndPassword(email, password);
-
-		//pre check and verify
+		//pre check if failed
 		if (result.status() == kFutureStatusComplete || result.status() == kFutureStatusInvalid) {
 			if (result.error() == auth::kAuthErrorNone) {
-				auth::User* user = result.result();
-				return ;
+				return true;
 			}
 			else {
 				//already failed for some reason
 				//handle exception
 				FireDriveException fde(UNKNOWN_EXCEPTION, result.error_message());
 				exception = fde;
-				return NULL;
+				return false;
+			}
+		}
+		
+		return true; //return true for pending
+	}
+
+	bool FireDrive::SignInUser(const char* email, const char* password, FireDriveException& exception, _OnCompletionCallBack callback) {
+		
+		//get Auth
+		auth::Auth* _auth = auth::Auth::GetAuth(AP_V2A(app));
+
+		//pointer to the user pointer, to be initialized with the result user pointer copy
+		void** userPointer = &user;
+
+		//declare lamda function for the call back - only registers when pending
+		auto callBFunc = [callback, &exception, userPointer](const Future<auth::User*>& _result) -> void {
+			std::string customessage = "";
+			bool res = false;
+
+			//store the function pointer as we are accessing it as a refference to the original which is in another scope
+			_OnCompletionCallBack userCallBack = callback; //this is not needed TO-DO
+
+			if (_result.status() == kFutureStatusComplete) {
+				//check now
+				if (_result.error() == auth::kAuthErrorNone) {
+					//success
+					res = true;
+
+					//HANDLE the operations here after----
+					{
+
+						//store the basic user details, retrieved from the result object
+						//may be possible to minimize - TODO
+						firebase::auth::User* _user = *_result.result();
+						/*int userClasslen = sizeof(firebase::auth::User);
+						*userPointer = calloc(userClasslen, 1);
+						memcpy_s(*userPointer, userClasslen, _user, userClasslen);*/
+						*userPointer = (void*)_user;
+					}
+
+				}
+				else {
+					//error
+					res = false;
+					customessage.append(_result.error_message());
+				}
+			}
+			else {
+				//should only enter this function if the operation is complete
+				//hence error!!!!
+				res = false;
+				customessage.append("Callback called OUT OF ORDINARY!!!");
+			}
+
+			//prepare the exception if any
+			if (res == false) {
+				FireDriveException fde(UNKNOWN_EXCEPTION, customessage.c_str());
+				exception = fde;
+			}
+
+			//call the callback provided by user if not NULL
+			if (callback)
+				userCallBack(res);
+		};
+
+		//sign in
+		Future<auth::User*> result = _auth->SignInWithEmailAndPassword(email, password);
+
+		//resgister the call back function
+		result.OnCompletion(callBFunc);
+
+		//pre check and verify
+		if (result.status() == kFutureStatusComplete || result.status() == kFutureStatusInvalid) {
+			if (result.error() == auth::kAuthErrorNone) {
+				return true;
+			}
+			else {
+				//already failed for some reason
+				//handle exception
+				FireDriveException fde(UNKNOWN_EXCEPTION, result.error_message());
+				exception = fde;
+				return false;
 			}
 		}
 
+		return true;
+	}
 
+	bool FireDrive::IsSignedIn() const {
+		if (user) {
+			if (US_V2A(user)->uid().empty() || US_V2A(user)->uid().length() < 10)
+				return false;
+			else
+				return true;
+		}
+		return false;
+	}
+
+	bool FireDrive::LogOut() const {
+		//directly return true if nothing is there already
+		if (!IsSignedIn())
+			return true;
+		//get Auth
+		auth::Auth* _auth = auth::Auth::GetAuth(AP_V2A(app));
+		if (_auth) {
+			_auth->SignOut();
+			user = NULL;
+		}
+		else return false;
+		return true;
+	}
+
+	std::shared_ptr<const std::string> FireDrive::GetCurrentUserUID() const {
+		if (IsSignedIn()) {
+			return std::make_shared<std::string>(US_V2A(user)->uid());
+		}
+		return NULL;
+	}
+
+	std::shared_ptr<const std::string> FireDrive::GetCurrentUserDispName() const {
+		if (IsSignedIn()) {
+			return std::make_shared<std::string>(US_V2A(user)->display_name());
+		}
 		return NULL;
 	}
 
@@ -274,7 +384,7 @@ namespace _FireDrive_ {
 		}
 
 		//if custom message exists
-		if (customMessageFormat != NULL) {
+		if (customMessageFormat != NULL || customMessageFormat != "") {
 			//read the varargs and prepare the message string
 			//va_list list;
 
@@ -355,7 +465,7 @@ namespace _FireDrive_ {
 			//reserve the space needed
 			str = std::make_shared<std::string>();
 			str->reserve((int)length);
-			if (str->capacity() < length) {
+			if (str->capacity() < (size_t)length) {
 				//error
 				ifs.close();
 				throw FireDriveException(FireDriveExceptions::NO_MEMORY, "Not able to reserve more memory!");
