@@ -44,3 +44,6 @@ latest drivers for the board you are using.]
 1. Repo the project at your end.
 2. Open up the lidcap.sln solution in visual studio.
 3. Build the project. [Building the project should automatically upload the firmware to your board]
+
+
+To be continue <Project on halt>
